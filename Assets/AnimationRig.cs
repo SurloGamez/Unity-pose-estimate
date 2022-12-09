@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AnimationRig : MonoBehaviour
 {
+    public Vector3 poseForward;
     public string filename = "poseJson.json";
     public Poses poses;
 
@@ -98,9 +99,10 @@ public class AnimationRig : MonoBehaviour
     {
         foreach(Vector2Int points in lineBones)
         {
-            DrawLine(landmarkPoints[points.x].transform.position, landmarkPoints[points.y].transform.position);
+            DrawLine(landmarkPoints[points.x].transform.position, landmarkPoints[points.y].transform.position,Color.red);
         }
 
+        DrawLine(landmarkPoints[24].transform.position, landmarkPoints[24].transform.position + poseForward * poseScale,Color.blue);
     }
 
     private IEnumerator Animate()
@@ -167,9 +169,9 @@ public class AnimationRig : MonoBehaviour
         Utility.CreateFile(json, filename.Replace(".json", "") + "_changes.json");
     }
 
-    private void DrawLine(Vector3 a, Vector3 b)
+    private void DrawLine(Vector3 a, Vector3 b, Color color)
     {
-        Debug.DrawLine(a, b, Color.red);
+        Debug.DrawLine(a, b, color);
     }
 
     private void NormalizeLandmarks(int refrenceLandmarkIndex)
