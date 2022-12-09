@@ -241,7 +241,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &294400490
 Transform:
   m_ObjectHideFlags: 0
@@ -688,6 +688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c7d29afaec054caf10a1387b5bf8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poseForward: {x: 0, y: 0, z: 0}
   filename: poseJson.json
   poses:
     poses: []
@@ -1191,6 +1192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c7d29afaec054caf10a1387b5bf8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poseForward: {x: 0, y: 0, z: -1}
   filename: poseJson (1).json
   poses:
     poses: []
