@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnimationRig : MonoBehaviour
 {
-    public Vector3 poseForward;
+    public Vector3 poseForward, poseRight, poseUp;
     public string filename = "poseJson.json";
     public Poses poses;
 
@@ -25,12 +25,13 @@ public class AnimationRig : MonoBehaviour
         public int A, B, C; // A: Root  B: Joint  C: appendage
         public Transform joint;
         public Transform appendage;
+        public AnimationRig anim;
         
         public virtual void SetJointAngle(GameObject[] landmarkPoints)
         {
             //Vector3 root = (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized;
             Vector3 appendage = (landmarkPoints[C].transform.position - landmarkPoints[B].transform.position).normalized;
-            
+            appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
             joint.transform.up = -appendage;
         }
     }
@@ -48,13 +49,14 @@ public class AnimationRig : MonoBehaviour
                 (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized + landmarkPoints[A].transform.position;
 
             Vector3 appendage = (AB - CD).normalized;
-
+            appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
             joint.transform.up = appendage;
         }
     }
     public Joint shoulder_right, shoulder_left, elbow_right, elbow_left, hip_right, hip_left, knee_right, knee_left;
     public JointCompound body;
     private List<Joint> joints = new List<Joint>();
+    public Transform targetTransform;
 
     // Start is called before the first frame update
     void Start()
@@ -82,6 +84,7 @@ public class AnimationRig : MonoBehaviour
             newJoint.transform.parent = joint.joint.parent;
             joint.joint.parent = newJoint.transform;
             joint.joint = newJoint.transform;
+            joint.anim = this;
         }
 
         poses = Utility.GetJsonObject<Poses>(filename);
@@ -172,6 +175,18 @@ public class AnimationRig : MonoBehaviour
     private void DrawLine(Vector3 a, Vector3 b, Color color)
     {
         Debug.DrawLine(a, b, color);
+    }
+
+    private Vector3 NormalizeAppendage(Vector3 appendage, Transform targetTransform)
+    {
+        //map pose onto world space
+        float forward = Vector3.Dot(poseForward, appendage);
+        float up = Vector3.Dot(poseUp, appendage);
+        float right = Vector3.Dot(poseRight, appendage);
+
+        //Debug.Log($"{right} {up} {forward}");
+
+        return (targetTransform.forward * forward + targetTransform.up * up + targetTransform.right * right).normalized;
     }
 
     private void NormalizeLandmarks(int refrenceLandmarkIndex)
