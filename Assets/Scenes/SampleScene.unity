@@ -1209,10 +1209,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c7d29afaec054caf10a1387b5bf8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poseForward: {x: 0, y: 0, z: -1}
+  poseForward: {x: 1, y: 0, z: 0.33}
   poseRight: {x: -1, y: 0, z: 0}
   poseUp: {x: 0, y: 1, z: 0}
-  filename: poseJson (1).json
+  filename: poseJson.json
   poses:
     poses: []
   poseIndex: 0
