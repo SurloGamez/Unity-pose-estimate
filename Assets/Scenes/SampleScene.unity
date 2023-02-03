@@ -688,7 +688,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c7d29afaec054caf10a1387b5bf8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useNormalizeAppendage: 0
   poseForward: {x: 0, y: 0, z: 0}
+  poseRight: {x: 0, y: 0, z: 0}
+  poseUp: {x: 0, y: 0, z: 0}
   filename: poseJson.json
   poses:
     poses: []
@@ -740,55 +743,65 @@ MonoBehaviour:
     C: 14
     joint: {fileID: 1367600079}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
   shoulder_left:
     A: 23
     B: 11
     C: 13
     joint: {fileID: 1457284635}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
   elbow_right:
     A: 12
     B: 14
     C: 16
     joint: {fileID: 703389773}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
   elbow_left:
     A: 11
     B: 13
     C: 15
     joint: {fileID: 1035522543}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
   hip_right:
     A: 12
     B: 24
     C: 26
     joint: {fileID: 674417861}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
   hip_left:
     A: 11
     B: 23
     C: 25
     joint: {fileID: 439502982}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
   knee_right:
     A: 24
     B: 26
     C: 28
     joint: {fileID: 1847890036}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
   knee_left:
     A: 23
     B: 25
     C: 27
     joint: {fileID: 1906740356}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
   body:
     A: 0
     B: 0
     C: 0
     joint: {fileID: 0}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
     D: 0
+  targetTransform: {fileID: 0}
 --- !u!4 &933712463 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400270, guid: b235179bd2a63d1468dd430670338c55, type: 3}
@@ -1020,6 +1033,11 @@ Transform:
   m_Father: {fileID: 1457284635}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1058268124 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
+  m_PrefabInstance: {fileID: 1515280853}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1104683186
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,7 +1210,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c7d29afaec054caf10a1387b5bf8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useNormalizeAppendage: 0
   poseForward: {x: 0, y: 0, z: -1}
+  poseRight: {x: -1, y: 0, z: 0}
+  poseUp: {x: 0, y: 1, z: 0}
   filename: poseJson (1).json
   poses:
     poses: []
@@ -1235,7 +1256,7 @@ MonoBehaviour:
   - {x: 5, y: 6}
   - {x: 8, y: 6}
   - {x: 9, y: 10}
-  frameRate: 0
+  frameRate: 10
   referenceLandmarkIndex: 24
   referenceLandmarkPoseIndex: 0
   shoulder_right:
@@ -1244,55 +1265,65 @@ MonoBehaviour:
     C: 14
     joint: {fileID: 1515280854}
     appendage: {fileID: 1515280855}
+    anim: {fileID: 0}
   shoulder_left:
     A: 23
     B: 11
     C: 13
     joint: {fileID: 1515280856}
     appendage: {fileID: 1515280857}
+    anim: {fileID: 0}
   elbow_right:
     A: 12
     B: 14
     C: 16
     joint: {fileID: 1515280855}
     appendage: {fileID: 933712463}
+    anim: {fileID: 0}
   elbow_left:
     A: 11
     B: 13
     C: 15
     joint: {fileID: 1515280857}
     appendage: {fileID: 525809335}
+    anim: {fileID: 0}
   hip_right:
     A: 12
     B: 24
     C: 26
     joint: {fileID: 1515280858}
     appendage: {fileID: 1515280859}
+    anim: {fileID: 0}
   hip_left:
     A: 11
     B: 23
     C: 25
     joint: {fileID: 1515280860}
     appendage: {fileID: 1515280861}
+    anim: {fileID: 0}
   knee_right:
     A: 24
     B: 26
     C: 28
     joint: {fileID: 1515280859}
     appendage: {fileID: 1274141166}
+    anim: {fileID: 0}
   knee_left:
     A: 23
     B: 25
     C: 27
     joint: {fileID: 1515280861}
     appendage: {fileID: 1939329285}
+    anim: {fileID: 0}
   body:
     A: 12
     B: 11
     C: 24
     joint: {fileID: 83701748}
     appendage: {fileID: 0}
+    anim: {fileID: 0}
     D: 23
+  targetTransform: {fileID: 1058268124}
 --- !u!4 &1304680732
 Transform:
   m_ObjectHideFlags: 0
@@ -1300,14 +1331,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1304680730}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.112422906, z: 0, w: 0.9936605}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -12.91, z: 0}
 --- !u!1 &1367600078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1597,15 +1628,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: -0.35184142
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: -0.93605965
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalRotation.z
@@ -1617,7 +1648,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: -221.2
       objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
