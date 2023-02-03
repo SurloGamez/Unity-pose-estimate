@@ -187,7 +187,7 @@ public class AnimationRig : MonoBehaviour
         float up = Vector3.Dot(poseUp, appendage);
         float right = Vector3.Dot(poseRight, appendage);
 
-        //Debug.Log($"{right} {up} {forward}");
+        Debug.Log($"{right} {up} {forward}");
 
         return (targetTransform.forward * forward + targetTransform.up * up + targetTransform.right * right).normalized;
     }
