@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AnimationRig : MonoBehaviour
 {
+    public bool useNormalizeAppendage;
     public Vector3 poseForward, poseRight, poseUp;
     public string filename = "poseJson.json";
     public Poses poses;
@@ -19,6 +20,11 @@ public class AnimationRig : MonoBehaviour
     public int referenceLandmarkPoseIndex = 0;
     private Vector3 referenceLandmark;
 
+    public Joint shoulder_right, shoulder_left, elbow_right, elbow_left, hip_right, hip_left, knee_right, knee_left;
+    public JointCompound body;
+    private List<Joint> joints = new List<Joint>();
+    public Transform targetTransform;
+
     [System.Serializable]
     public class Joint
     {
@@ -31,7 +37,7 @@ public class AnimationRig : MonoBehaviour
         {
             //Vector3 root = (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized;
             Vector3 appendage = (landmarkPoints[C].transform.position - landmarkPoints[B].transform.position).normalized;
-            appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
+            if(anim.useNormalizeAppendage) appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
             joint.transform.up = -appendage;
         }
     }
@@ -49,14 +55,11 @@ public class AnimationRig : MonoBehaviour
                 (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized + landmarkPoints[A].transform.position;
 
             Vector3 appendage = (AB - CD).normalized;
-            appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
+            if (anim.useNormalizeAppendage) appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
             joint.transform.up = appendage;
         }
     }
-    public Joint shoulder_right, shoulder_left, elbow_right, elbow_left, hip_right, hip_left, knee_right, knee_left;
-    public JointCompound body;
-    private List<Joint> joints = new List<Joint>();
-    public Transform targetTransform;
+
 
     // Start is called before the first frame update
     void Start()
