@@ -24,6 +24,8 @@ public class AnimationRig : MonoBehaviour
     public JointCompound body;
     private List<Joint> joints = new List<Joint>();
     public Transform targetTransform;
+    private Transform bodyTransform;
+    public Vector3 bodyRotationOffset;
 
     [System.Serializable]
     public class Joint
@@ -32,13 +34,25 @@ public class AnimationRig : MonoBehaviour
         public Transform joint;
         public Transform appendage;
         public AnimationRig anim;
-        
+        public Vector3 lastAppendageAngle;
+
         public virtual void SetJointAngle(GameObject[] landmarkPoints)
         {
             //Vector3 root = (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized;
             Vector3 appendage = (landmarkPoints[C].transform.position - landmarkPoints[B].transform.position).normalized;
-            if(anim.useNormalizeAppendage) appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
-            joint.transform.up = -appendage;
+            Vector3 newAppendageAngle = appendage;
+            if (anim.useNormalizeAppendage)
+            {
+                appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
+                //if(lastAppendageAngle != null)
+                //{
+                //    newAppendageAngle = appendage - lastAppendageAngle;
+                //}
+                //appendage = this.appendage.localPosition + appendage;
+                //appendage = (appendage - this.appendage.position).normalized;
+            }
+            joint.transform.up = -appendage;// newAppendageAngle;
+            lastAppendageAngle = appendage;
         }
     }
     [System.Serializable]
@@ -49,14 +63,23 @@ public class AnimationRig : MonoBehaviour
         public override void SetJointAngle(GameObject[] landmarkPoints)
         {
             //Vector3 root = (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized;
-            Vector3 CD = (Vector3.Distance(landmarkPoints[C].transform.position, landmarkPoints[D].transform.position) / 2) * 
+            Vector3 CD = (Vector3.Distance(landmarkPoints[C].transform.position, landmarkPoints[D].transform.position) / 2) *
                 (landmarkPoints[D].transform.position - landmarkPoints[C].transform.position).normalized + landmarkPoints[C].transform.position;
             Vector3 AB = (Vector3.Distance(landmarkPoints[A].transform.position, landmarkPoints[B].transform.position) / 2) *
                 (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized + landmarkPoints[A].transform.position;
 
             Vector3 appendage = (AB - CD).normalized;
-            if (anim.useNormalizeAppendage) appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
-            joint.transform.up = appendage;
+            Vector3 newAppendageAngle = appendage;
+            if (anim.useNormalizeAppendage)
+            {
+                appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
+                //if (lastAppendageAngle != null)
+                //{
+                //    newAppendageAngle = appendage - lastAppendageAngle;
+                //}
+            }
+            joint.transform.up = appendage;// newAppendageAngle;
+            lastAppendageAngle = appendage;
         }
     }
 
@@ -64,6 +87,9 @@ public class AnimationRig : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        bodyTransform = body.appendage;
+        bodyRotationOffset = targetTransform.localEulerAngles - bodyTransform.localEulerAngles;
+
         joints.Add(body);
         joints.Add(shoulder_right);
         joints.Add(shoulder_left);
@@ -74,7 +100,7 @@ public class AnimationRig : MonoBehaviour
         joints.Add(knee_right);
         joints.Add(knee_left);
 
-        for( int i = 0; i < joints.Count; i+=1)
+        for (int i = 0; i < joints.Count; i += 1)
         {
             Joint joint = joints[i];
             GameObject newJoint = new GameObject(joint.joint.name + "_parent");
@@ -82,6 +108,7 @@ public class AnimationRig : MonoBehaviour
             if (joint.appendage)
             {
                 newJoint.transform.up = joint.joint.position - joint.appendage.position;
+                //joint.lastAppendageAngle = newJoint.transform.up;
             }
 
             newJoint.transform.parent = joint.joint.parent;
@@ -91,7 +118,7 @@ public class AnimationRig : MonoBehaviour
         }
 
         poses = Utility.GetJsonObject<Poses>(filename);
-        for(int i = 0; i < landmarkPoints.Length; i += 1)
+        for (int i = 0; i < landmarkPoints.Length; i += 1)
         {
             landmarkPoints[i] = Instantiate(landmarkPointPrefab);
         }
@@ -103,19 +130,19 @@ public class AnimationRig : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach(Vector2Int points in lineBones)
+        foreach (Vector2Int points in lineBones)
         {
             DrawLine(landmarkPoints[points.x].transform.position, landmarkPoints[points.y].transform.position, Color.red);
         }
 
-        DrawLine(landmarkPoints[24].transform.position, landmarkPoints[24].transform.position  + poseForward * poseScale, Color.blue);
+        DrawLine(landmarkPoints[24].transform.position, landmarkPoints[24].transform.position + poseForward * poseScale, Color.blue);
     }
 
     private IEnumerator Animate()
     {
         while (true)
         {
-            if(frameRate > 0)
+            if (frameRate > 0)
             {
                 yield return new WaitForSeconds(1 / frameRate);
                 IncrementPose();
@@ -124,7 +151,7 @@ public class AnimationRig : MonoBehaviour
             {
                 yield return null;
             }
-            
+
         }
     }
 
@@ -136,10 +163,12 @@ public class AnimationRig : MonoBehaviour
             float x = landmarks[i].x;
             float y = -landmarks[i].y;
             float z = landmarks[i].z;
-            landmarkPoints[i].transform.position = (new Vector3(x, y, z) + referenceLandmark) * poseScale ;
+            landmarkPoints[i].transform.position = (new Vector3(x, y, z) + referenceLandmark) * poseScale;
         }
 
-        foreach(Joint joint in joints) { joint.SetJointAngle(landmarkPoints); }
+        foreach (Joint joint in joints) { joint.SetJointAngle(landmarkPoints); }
+
+        bodyTransform.localEulerAngles = targetTransform.localEulerAngles - bodyRotationOffset;
     }
 
     public void DecrementPose()
@@ -187,18 +216,18 @@ public class AnimationRig : MonoBehaviour
         float up = Vector3.Dot(poseUp, appendage);
         float right = Vector3.Dot(poseRight, appendage);
 
-        //Debug.Log($"{right} {up} {forward}");
+        Debug.Log($"{right} {up} {forward}");
 
         return (targetTransform.forward * forward + targetTransform.up * up + targetTransform.right * right).normalized;
     }
 
     private void NormalizeLandmarks(int refrenceLandmarkIndex)
     {
-        for(int poseIndex = 0; poseIndex < poses.poses.Length; poseIndex += 1)
+        for (int poseIndex = 0; poseIndex < poses.poses.Length; poseIndex += 1)
         {
             for (int i = 0; i < poses.poses[poseIndex].landmarks.Length; i += 1)
             {
-                if(i != refrenceLandmarkIndex)
+                if (i != refrenceLandmarkIndex)
                 {
                     Landmark refrenceLandmark = poses.poses[i].landmarks[refrenceLandmarkIndex];
                     Landmark[] landmarks = poses.poses[poseIndex].landmarks;
@@ -206,20 +235,20 @@ public class AnimationRig : MonoBehaviour
                     landmarks[i].y = landmarks[i].y - refrenceLandmark.y;
                     landmarks[i].z = landmarks[i].z - refrenceLandmark.z;
                 }
-                else 
+                else
                 {
                     Landmark[] landmarks = poses.poses[poseIndex].landmarks;
                     if (poseIndex == referenceLandmarkPoseIndex)
                     {
                         referenceLandmark = new Vector3(landmarks[i].x, landmarks[i].y, landmarks[i].z);
                     }
-                    
+
                     landmarks[i].x = 0;
                     landmarks[i].y = 0;
                     landmarks[i].z = 0;
                 }
             }
         }
-        
+
     }
 }
