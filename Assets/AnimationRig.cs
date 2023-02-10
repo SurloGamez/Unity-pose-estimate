@@ -24,6 +24,8 @@ public class AnimationRig : MonoBehaviour
     public JointCompound body;
     private List<Joint> joints = new List<Joint>();
     public Transform targetTransform;
+    private Transform bodyTransform;
+    private Vector3 bodyRotationOffset;
 
     [System.Serializable]
     public class Joint
@@ -32,13 +34,25 @@ public class AnimationRig : MonoBehaviour
         public Transform joint;
         public Transform appendage;
         public AnimationRig anim;
+        public Vector3 lastAppendageAngle;
         
         public virtual void SetJointAngle(GameObject[] landmarkPoints)
         {
             //Vector3 root = (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized;
             Vector3 appendage = (landmarkPoints[C].transform.position - landmarkPoints[B].transform.position).normalized;
-            if(anim.useNormalizeAppendage) appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
-            joint.transform.up = -appendage;
+            Vector3 newAppendageAngle = appendage;
+            if (anim.useNormalizeAppendage)
+            {
+                appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
+                //if(lastAppendageAngle != null)
+                //{
+                //    newAppendageAngle = appendage - lastAppendageAngle;
+                //}
+                //appendage = this.appendage.localPosition + appendage;
+                //appendage = (appendage - this.appendage.position).normalized;
+            }
+            joint.transform.up = -appendage;// newAppendageAngle;
+            lastAppendageAngle = appendage;
         }
     }
     [System.Serializable]
@@ -55,8 +69,17 @@ public class AnimationRig : MonoBehaviour
                 (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized + landmarkPoints[A].transform.position;
 
             Vector3 appendage = (AB - CD).normalized;
-            if (anim.useNormalizeAppendage) appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
-            joint.transform.up = appendage;
+            Vector3 newAppendageAngle = appendage;
+            if (anim.useNormalizeAppendage)
+            {
+                appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
+                //if (lastAppendageAngle != null)
+                //{
+                //    newAppendageAngle = appendage - lastAppendageAngle;
+                //}
+            }
+            joint.transform.up = appendage;// newAppendageAngle;
+            lastAppendageAngle = appendage;
         }
     }
 
@@ -64,6 +87,9 @@ public class AnimationRig : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        bodyTransform = body.joint;
+        bodyRotationOffset = targetTransform.localEulerAngles - bodyTransform.localEulerAngles;
+
         joints.Add(body);
         joints.Add(shoulder_right);
         joints.Add(shoulder_left);
@@ -82,6 +108,7 @@ public class AnimationRig : MonoBehaviour
             if (joint.appendage)
             {
                 newJoint.transform.up = joint.joint.position - joint.appendage.position;
+                //joint.lastAppendageAngle = newJoint.transform.up;
             }
 
             newJoint.transform.parent = joint.joint.parent;
@@ -140,6 +167,8 @@ public class AnimationRig : MonoBehaviour
         }
 
         foreach(Joint joint in joints) { joint.SetJointAngle(landmarkPoints); }
+
+        bodyTransform.localEulerAngles = targetTransform.localEulerAngles - bodyRotationOffset;
     }
 
     public void DecrementPose()
