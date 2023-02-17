@@ -78,6 +78,7 @@ public class AnimationRig : MonoBehaviour
                 //    newAppendageAngle = appendage - lastAppendageAngle;
                 //}
             }
+            
             joint.transform.up = appendage;// newAppendageAngle;
             lastAppendageAngle = appendage;
         }
@@ -126,9 +127,14 @@ public class AnimationRig : MonoBehaviour
         SetPose(poseIndex);
         StartCoroutine(Animate());
     }
+    public bool autoUpdate = true;
+    private void Update()
+    {
+        if (autoUpdate) AnimUpdate();
+    }
 
     // Update is called once per frame
-    void Update()
+    public void AnimUpdate()
     {
         foreach(Vector2Int points in lineBones)
         {
@@ -155,6 +161,11 @@ public class AnimationRig : MonoBehaviour
         }
     }
 
+    public void UpdatePose()
+    {
+        SetPose(poseIndex);
+    }
+
     private void SetPose(int poseIndex)
     {
         Landmark[] landmarks = poses.poses[poseIndex].landmarks;
@@ -166,9 +177,10 @@ public class AnimationRig : MonoBehaviour
             landmarkPoints[i].transform.position = (new Vector3(x, y, z) + referenceLandmark) * poseScale ;
         }
 
-        foreach(Joint joint in joints) { joint.SetJointAngle(landmarkPoints); }
-
         bodyTransform.localEulerAngles = targetTransform.localEulerAngles - bodyRotationOffset;
+        foreach (Joint joint in joints) { joint.SetJointAngle(landmarkPoints); }
+
+        
     }
 
     public void DecrementPose()
