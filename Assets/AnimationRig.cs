@@ -27,6 +27,8 @@ public class AnimationRig : MonoBehaviour
     private Transform bodyTransform;
     private Vector3 bodyRotationOffset;
 
+    public bool smoothRotate = true;
+
     [System.Serializable]
     public class Joint
     {
@@ -35,6 +37,10 @@ public class AnimationRig : MonoBehaviour
         public Transform appendage;
         public AnimationRig anim;
         public Vector3 lastAppendageAngle;
+
+        public Transform weightedTarget;
+        [Range(0,1)]
+        public float weight = 0;
         
         public virtual void SetJointAngle(GameObject[] landmarkPoints)
         {
@@ -44,15 +50,29 @@ public class AnimationRig : MonoBehaviour
             if (anim.useNormalizeAppendage)
             {
                 appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
-                //if(lastAppendageAngle != null)
-                //{
-                //    newAppendageAngle = appendage - lastAppendageAngle;
-                //}
-                //appendage = this.appendage.localPosition + appendage;
-                //appendage = (appendage - this.appendage.position).normalized;
             }
-            joint.transform.up = -appendage;// newAppendageAngle;
-            lastAppendageAngle = appendage;
+            if (weightedTarget)
+            {
+                float targetDelta = Vector3.Distance(weightedTarget.position, appendage) * weight;
+                appendage = appendage - targetDelta * (weightedTarget.position - appendage).normalized;
+            }
+            if(!anim.smoothRotate) joint.transform.up = -appendage;// newAppendageAngle;
+            lastAppendageAngle = -appendage;
+        }
+
+        public virtual void SmoothRotate()
+        {
+            float t = Time.deltaTime;
+            Vector3 nextAngle = lastAppendageAngle;
+            if(t < anim.nextFrame - Time.time)
+            {
+                float distance = Vector3.Distance(joint.transform.up, lastAppendageAngle);
+                float timeRemaining = anim.nextFrame - Time.time;
+                int stepsRemaining = (int) (timeRemaining / t);
+                nextAngle = Vector3.MoveTowards(joint.transform.up, lastAppendageAngle, distance / stepsRemaining);
+            }
+
+            joint.transform.up = nextAngle;
         }
     }
     [System.Serializable]
@@ -73,13 +93,10 @@ public class AnimationRig : MonoBehaviour
             if (anim.useNormalizeAppendage)
             {
                 appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
-                //if (lastAppendageAngle != null)
-                //{
-                //    newAppendageAngle = appendage - lastAppendageAngle;
-                //}
+
             }
-            
-            joint.transform.up = appendage;// newAppendageAngle;
+
+            if (!anim.smoothRotate) joint.transform.up = appendage;// newAppendageAngle;
             lastAppendageAngle = appendage;
         }
     }
@@ -136,6 +153,10 @@ public class AnimationRig : MonoBehaviour
     // Update is called once per frame
     public void AnimUpdate()
     {
+        if (smoothRotate)
+        {
+            foreach (Joint joint in joints) joint.SmoothRotate();
+        }
         foreach(Vector2Int points in lineBones)
         {
             DrawLine(landmarkPoints[points.x].transform.position, landmarkPoints[points.y].transform.position, Color.red);
@@ -143,13 +164,14 @@ public class AnimationRig : MonoBehaviour
 
         DrawLine(landmarkPoints[24].transform.position, landmarkPoints[24].transform.position  + poseForward * poseScale, Color.blue);
     }
-
+    float nextFrame = 0;
     private IEnumerator Animate()
     {
         while (true)
         {
             if(frameRate > 0)
             {
+                nextFrame = Time.time + 1 / frameRate;
                 yield return new WaitForSeconds(1 / frameRate);
                 IncrementPose();
             }
