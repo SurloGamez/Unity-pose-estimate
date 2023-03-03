@@ -19,7 +19,8 @@ public class AnimationMovementController : MonoBehaviour
     {
         float vertical = Input.GetAxisRaw("Vertical");
         float horizontal = Input.GetAxisRaw("Horizontal");
-        Vector3 direction = (new Vector3(horizontal, 0, vertical)).normalized;
+        Vector3 direction = new Vector3(horizontal, 0, vertical);
+        if (direction.magnitude > 1) direction = direction.normalized;
         rb.velocity = direction * speed + rb.velocity.y * Vector3.up;
 
         bool directionChanged = direction == rb.transform.forward;

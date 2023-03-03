@@ -105,43 +105,7 @@ public class AnimationRig : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bodyTransform = body.joint;
-        bodyRotationOffset = targetTransform.localEulerAngles - bodyTransform.localEulerAngles;
-
-        joints.Add(body);
-        joints.Add(shoulder_right);
-        joints.Add(shoulder_left);
-        joints.Add(elbow_right);
-        joints.Add(elbow_left);
-        joints.Add(hip_right);
-        joints.Add(hip_left);
-        joints.Add(knee_right);
-        joints.Add(knee_left);
-
-        for( int i = 0; i < joints.Count; i+=1)
-        {
-            Joint joint = joints[i];
-            GameObject newJoint = new GameObject(joint.joint.name + "_parent");
-            newJoint.transform.position = joint.joint.position;
-            if (joint.appendage)
-            {
-                newJoint.transform.up = joint.joint.position - joint.appendage.position;
-                //joint.lastAppendageAngle = newJoint.transform.up;
-            }
-
-            newJoint.transform.parent = joint.joint.parent;
-            joint.joint.parent = newJoint.transform;
-            joint.joint = newJoint.transform;
-            joint.anim = this;
-        }
-
-        poses = Utility.GetJsonObject<Poses>(filename);
-        for(int i = 0; i < landmarkPoints.Length; i += 1)
-        {
-            landmarkPoints[i] = Instantiate(landmarkPointPrefab);
-        }
-        //NormalizeLandmarks(24);
-        SetPose(poseIndex);
+        Setup();
         StartCoroutine(Animate());
     }
     public bool autoUpdate = true;
@@ -203,6 +167,46 @@ public class AnimationRig : MonoBehaviour
         foreach (Joint joint in joints) { joint.SetJointAngle(landmarkPoints); }
 
         
+    }
+    public void Setup()
+    {
+        bodyTransform = body.joint;
+        bodyRotationOffset = targetTransform.localEulerAngles - bodyTransform.localEulerAngles;
+
+        joints.Add(body);
+        joints.Add(shoulder_right);
+        joints.Add(shoulder_left);
+        joints.Add(elbow_right);
+        joints.Add(elbow_left);
+        joints.Add(hip_right);
+        joints.Add(hip_left);
+        joints.Add(knee_right);
+        joints.Add(knee_left);
+
+        for (int i = 0; i < joints.Count; i += 1)
+        {
+            Joint joint = joints[i];
+            GameObject newJoint = new GameObject(joint.joint.name + "_parent");
+            newJoint.transform.position = joint.joint.position;
+            if (joint.appendage)
+            {
+                newJoint.transform.up = joint.joint.position - joint.appendage.position;
+                //joint.lastAppendageAngle = newJoint.transform.up;
+            }
+
+            newJoint.transform.parent = joint.joint.parent;
+            joint.joint.parent = newJoint.transform;
+            joint.joint = newJoint.transform;
+            joint.anim = this;
+        }
+
+        poses = Utility.GetJsonObject<Poses>(filename);
+        for (int i = 0; i < landmarkPoints.Length; i += 1)
+        {
+            landmarkPoints[i] = Instantiate(landmarkPointPrefab);
+        }
+        //NormalizeLandmarks(24);
+        SetPose(poseIndex);
     }
 
     public void DecrementPose()

@@ -17,7 +17,10 @@ public class AnimationRigEditor : Editor
     {
 
         DrawDefaultInspector();
-
+        if (GUILayout.Button("Setup AnimationRig", GUILayout.Height(35)))
+        {
+            targetManager.Setup();
+        }
         if (GUILayout.Button("-", GUILayout.Height(35)))
         {
             targetManager.DecrementPose();
