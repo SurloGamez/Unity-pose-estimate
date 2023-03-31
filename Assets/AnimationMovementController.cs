@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnimationMovementController : MonoBehaviour
 {
-    public Rigidbody rb;
+    public Rigidbody2D rb;
     public float speed = 10;
     public AnimationRig animRig;
 
@@ -17,15 +17,15 @@ public class AnimationMovementController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        float vertical = Input.GetAxisRaw("Vertical");
+        //float vertical = Input.GetAxisRaw("Vertical");
         float horizontal = Input.GetAxisRaw("Horizontal");
-        Vector3 direction = new Vector3(horizontal, 0, vertical);
-        if (direction.magnitude > 1) direction = direction.normalized;
-        rb.velocity = direction * speed + rb.velocity.y * Vector3.up;
+        Vector2 direction = new Vector2(horizontal, 0);
+        //if (direction.magnitude > 1) direction = direction.normalized;
+        rb.velocity = direction * speed + rb.velocity.y * Vector2.up;
 
-        bool directionChanged = direction == rb.transform.forward;
+        //bool directionChanged = direction == rb.transform.forward;
 
-        if (direction != Vector3.zero) rb.transform.forward = direction;
+        if (direction != Vector2.zero) rb.transform.right = direction;
 
         //if (directionChanged) animRig.UpdatePose();
         //animRig.AnimUpdate();

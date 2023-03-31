@@ -259,34 +259,34 @@ public class AnimationRig : MonoBehaviour
         return (targetTransform.forward * forward + targetTransform.up * up + targetTransform.right * right).normalized;
     }
 
-    private void NormalizeLandmarks(int refrenceLandmarkIndex)
-    {
-        for(int poseIndex = 0; poseIndex < poses.poses.Length; poseIndex += 1)
-        {
-            for (int i = 0; i < poses.poses[poseIndex].landmarks.Length; i += 1)
-            {
-                if(i != refrenceLandmarkIndex)
-                {
-                    Landmark refrenceLandmark = poses.poses[i].landmarks[refrenceLandmarkIndex];
-                    Landmark[] landmarks = poses.poses[poseIndex].landmarks;
-                    landmarks[i].x = landmarks[i].x - refrenceLandmark.x;
-                    landmarks[i].y = landmarks[i].y - refrenceLandmark.y;
-                    landmarks[i].z = landmarks[i].z - refrenceLandmark.z;
-                }
-                else 
-                {
-                    Landmark[] landmarks = poses.poses[poseIndex].landmarks;
-                    if (poseIndex == referenceLandmarkPoseIndex)
-                    {
-                        referenceLandmark = new Vector3(landmarks[i].x, landmarks[i].y, landmarks[i].z);
-                    }
+    //private void NormalizeLandmarks(int refrenceLandmarkIndex)
+    //{
+    //    for(int poseIndex = 0; poseIndex < poses.poses.Length; poseIndex += 1)
+    //    {
+    //        for (int i = 0; i < poses.poses[poseIndex].landmarks.Length; i += 1)
+    //        {
+    //            if(i != refrenceLandmarkIndex)
+    //            {
+    //                Landmark refrenceLandmark = poses.poses[i].landmarks[refrenceLandmarkIndex];
+    //                Landmark[] landmarks = poses.poses[poseIndex].landmarks;
+    //                landmarks[i].x = landmarks[i].x - refrenceLandmark.x;
+    //                landmarks[i].y = landmarks[i].y - refrenceLandmark.y;
+    //                landmarks[i].z = landmarks[i].z - refrenceLandmark.z;
+    //            }
+    //            else 
+    //            {
+    //                Landmark[] landmarks = poses.poses[poseIndex].landmarks;
+    //                if (poseIndex == referenceLandmarkPoseIndex)
+    //                {
+    //                    referenceLandmark = new Vector3(landmarks[i].x, landmarks[i].y, landmarks[i].z);
+    //                }
                     
-                    landmarks[i].x = 0;
-                    landmarks[i].y = 0;
-                    landmarks[i].z = 0;
-                }
-            }
-        }
+    //                landmarks[i].x = 0;
+    //                landmarks[i].y = 0;
+    //                landmarks[i].z = 0;
+    //            }
+    //        }
+    //    }
         
-    }
+    //}
 }
