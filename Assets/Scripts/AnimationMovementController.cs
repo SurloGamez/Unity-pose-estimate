@@ -27,6 +27,9 @@ public class AnimationMovementController : MonoBehaviour
 
         if (direction != Vector2.zero) rb.transform.right = direction;
 
+        if (rb.velocity.magnitude > 0.1f) animRig.ChangeAnimation("run");
+        else animRig.ChangeAnimation("walk");
+
         //if (directionChanged) animRig.UpdatePose();
         //animRig.AnimUpdate();
 
