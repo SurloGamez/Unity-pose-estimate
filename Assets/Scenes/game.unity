@@ -243,7 +243,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154811736}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -256,7 +256,7 @@ Transform:
   - {fileID: 1961218200}
   m_Father: {fileID: 693755594}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &201190486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1345,7 +1345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useNormalizeAppendage: 1
-  WalkLandmarkJson: {fileID: 4900000, guid: 100155f0cba41544c905e145177f2aab, type: 3}
+  WalkLandmarkJson: {fileID: 4900000, guid: a40e6890f7c6c5c40a4b75a67d89742d, type: 3}
   RunAnimJson: {fileID: 0}
   walkAnim:
     name: walk
@@ -1353,15 +1353,23 @@ MonoBehaviour:
     frameSpeed: 1
     frameRate: 10
     poseForward: {x: -1, y: 0, z: 0}
-    poseRight: {x: 0, y: 0, z: -1}
+    poseRight: {x: 0, y: 0, z: 1}
     poseUp: {x: 0, y: 1, z: 0}
   runAnim:
     name: run
     jsonFile: {fileID: 4900000, guid: c54fd6cbb17b3e341bb3e1108dd0ab31, type: 3}
     frameSpeed: 1
     frameRate: 10
-    poseForward: {x: -1, y: 0, z: 0}
-    poseRight: {x: 0, y: 0, z: -1}
+    poseForward: {x: 0, y: 0, z: -1}
+    poseRight: {x: -1, y: 0, z: 0}
+    poseUp: {x: 0, y: 1, z: 0}
+  jumpAnim:
+    name: jump
+    jsonFile: {fileID: 4900000, guid: a40e6890f7c6c5c40a4b75a67d89742d, type: 3}
+    frameSpeed: 1
+    frameRate: 15
+    poseForward: {x: -1, y: 0, z: -1}
+    poseRight: {x: -1, y: 0, z: 1}
     poseUp: {x: 0, y: 1, z: 0}
   poseIndex: 0
   poseScale: 5
@@ -1536,7 +1544,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 693755593}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1544,7 +1552,7 @@ Transform:
   - {fileID: 154811737}
   m_Father: {fileID: 201190489}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &708380108
 GameObject:
   m_ObjectHideFlags: 0

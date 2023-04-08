@@ -35,6 +35,7 @@ public class playerController : MonoBehaviour
     int dir = 1;
     int jumpCount = 2;
     bool jumpPressed = false;
+    bool jumping = false;
     
     int chargeCounter = 0; // if greater than 0 that means currently in attack
     Vector2 chargeDir; // for attacking sideways
@@ -94,11 +95,29 @@ public class playerController : MonoBehaviour
             velocity.y = jumpForce;
             grounded = false;
             jumpCount--;
+            jumping = true;
+            anim.ChangeAnimation("jump", JumpAnimComplete);
         }
 
-        if (velocity.magnitude > 0.1f) anim.ChangeAnimation("run");
-        else anim.ChangeAnimation("walk");
+        HandleAnimation();
 
+    }
+
+    private void HandleAnimation()
+    {
+        if (!jumping)
+        {
+            if (velocity.magnitude > 0.1f) anim.ChangeAnimation("run");
+            else anim.ChangeAnimation("walk");
+        }
+        
+    }
+
+    private void JumpAnimComplete()
+    {
+
+        jumping = false;
+        HandleAnimation();
     }
 
     void UpdateYVel()

@@ -9,7 +9,7 @@ public class AnimationRig : MonoBehaviour
     //public string filename = "poseJson.json";
     //public Poses poses;
     public TextAsset WalkLandmarkJson, RunAnimJson;
-    public AnimationLandmark walkAnim, runAnim;
+    public AnimationLandmark walkAnim, runAnim, jumpAnim;
     private AnimationLandmark anim;
 
     public int poseIndex = 0;
@@ -33,6 +33,8 @@ public class AnimationRig : MonoBehaviour
  
 
     public bool smoothRotate = true;
+
+    private System.Action animationCompleteCallback;
 
     [System.Serializable]
     public class Joint
@@ -116,6 +118,7 @@ public class AnimationRig : MonoBehaviour
 
     public void Setup()
     {
+        animationCompleteCallback = defaultAnimationEndCallback;
         doeverythinginstart();
     }
     private void doeverythinginstart()
@@ -233,7 +236,12 @@ public class AnimationRig : MonoBehaviour
 
     public void IncrementPose()
     {
-        poseIndex = (poseIndex + 1) % anim.poses.poses.Length;
+        poseIndex = (poseIndex + 1); //% anim.poses.poses.Length;
+        if(poseIndex >= anim.poses.poses.Length)
+        {
+            animationCompleteCallback();
+            poseIndex = 0;
+        }
         SetPose(poseIndex);
     }
 
@@ -273,8 +281,13 @@ public class AnimationRig : MonoBehaviour
 
         return (targetTransform.forward * forward + targetTransform.up * up + targetTransform.right * right).normalized;
     }
-
+    void defaultAnimationEndCallback() { }
     public void ChangeAnimation(string name)
+    {
+        ChangeAnimation(name, defaultAnimationEndCallback);
+    }
+
+    public void ChangeAnimation(string name, System.Action callBack)
     {
         if(anim.name != name)
         {
@@ -286,8 +299,13 @@ public class AnimationRig : MonoBehaviour
             {
                 anim = runAnim;
                 poseIndex = 0;
+            }else if(name == "jump")
+            {
+                anim = jumpAnim;
+                poseIndex = 0;
             }
         }
+        animationCompleteCallback = callBack;
     }
 
     private void NormalizeLandmarks(int refrenceLandmarkIndex)
