@@ -32,8 +32,6 @@ public static class Utility
     {
         
         string relativePathToData = GetRelativePath(filename);
-        
-
         return File.ReadAllText(relativePathToData);
     }
     public static T GetJsonObject<T>(string filename)
@@ -44,5 +42,12 @@ public static class Utility
     public static T GetJson<T>(string json)
     {
         return JsonUtility.FromJson<T>(json);
+    }
+
+    public static float AngleBetweenPoints(float x, float y)
+    {
+        float unitOffset = y < 0 ? 360 : 0;
+        
+        return Mathf.Atan2(y, x) * 180 / Mathf.PI + unitOffset;
     }
 }

@@ -1349,15 +1349,15 @@ MonoBehaviour:
   RunAnimJson: {fileID: 0}
   walkAnim:
     name: walk
-    jsonFile: {fileID: 4900000, guid: 100155f0cba41544c905e145177f2aab, type: 3}
+    jsonFile: {fileID: 4900000, guid: 742d794e1a2b8ac4f970d952be8dfe91, type: 3}
     frameSpeed: 1
     frameRate: 10
-    poseForward: {x: -1, y: 0, z: 0}
-    poseRight: {x: 0, y: 0, z: 1}
+    poseForward: {x: 0, y: 0, z: -1}
+    poseRight: {x: -1, y: 0, z: 0}
     poseUp: {x: 0, y: 1, z: 0}
   runAnim:
     name: run
-    jsonFile: {fileID: 4900000, guid: c54fd6cbb17b3e341bb3e1108dd0ab31, type: 3}
+    jsonFile: {fileID: 4900000, guid: 9eb041729122ba7479ce07d54ee5b4b9, type: 3}
     frameSpeed: 1
     frameRate: 10
     poseForward: {x: 0, y: 0, z: -1}
@@ -1417,9 +1417,11 @@ MonoBehaviour:
     B: 12
     C: 14
     joint: {fileID: 1083506312}
+    jointX: {fileID: 0}
     appendage: {fileID: 273200831}
     anim: {fileID: 0}
     lastAppendageAngle: {x: 0, y: 0, z: 0}
+    defaultAngle: {x: 0, y: 0, z: 0}
     weightedTarget: {fileID: 851124041}
     weight: 0
   shoulder_left:
@@ -1427,9 +1429,11 @@ MonoBehaviour:
     B: 11
     C: 13
     joint: {fileID: 277773045}
+    jointX: {fileID: 0}
     appendage: {fileID: 897733204}
     anim: {fileID: 0}
     lastAppendageAngle: {x: 0, y: 0, z: 0}
+    defaultAngle: {x: 0, y: 0, z: 0}
     weightedTarget: {fileID: 0}
     weight: 0
   elbow_right:
@@ -1437,9 +1441,11 @@ MonoBehaviour:
     B: 14
     C: 16
     joint: {fileID: 273200831}
+    jointX: {fileID: 0}
     appendage: {fileID: 409069001}
     anim: {fileID: 0}
     lastAppendageAngle: {x: 0, y: 0, z: 0}
+    defaultAngle: {x: 0, y: 0, z: 0}
     weightedTarget: {fileID: 0}
     weight: 0
   elbow_left:
@@ -1447,9 +1453,11 @@ MonoBehaviour:
     B: 13
     C: 15
     joint: {fileID: 897733204}
+    jointX: {fileID: 0}
     appendage: {fileID: 259498531}
     anim: {fileID: 0}
     lastAppendageAngle: {x: 0, y: 0, z: 0}
+    defaultAngle: {x: 0, y: 0, z: 0}
     weightedTarget: {fileID: 0}
     weight: 0
   hip_right:
@@ -1457,9 +1465,11 @@ MonoBehaviour:
     B: 24
     C: 26
     joint: {fileID: 2140943931}
+    jointX: {fileID: 0}
     appendage: {fileID: 1769988036}
     anim: {fileID: 0}
     lastAppendageAngle: {x: 0, y: 0, z: 0}
+    defaultAngle: {x: 0, y: 0, z: 0}
     weightedTarget: {fileID: 0}
     weight: 0
   hip_left:
@@ -1467,9 +1477,11 @@ MonoBehaviour:
     B: 23
     C: 25
     joint: {fileID: 1881748552}
+    jointX: {fileID: 0}
     appendage: {fileID: 1915829551}
     anim: {fileID: 0}
     lastAppendageAngle: {x: 0, y: 0, z: 0}
+    defaultAngle: {x: 0, y: 0, z: 0}
     weightedTarget: {fileID: 0}
     weight: 0
   knee_right:
@@ -1477,9 +1489,11 @@ MonoBehaviour:
     B: 26
     C: 28
     joint: {fileID: 1769988036}
+    jointX: {fileID: 0}
     appendage: {fileID: 877203730}
     anim: {fileID: 0}
     lastAppendageAngle: {x: 0, y: 0, z: 0}
+    defaultAngle: {x: 0, y: 0, z: 0}
     weightedTarget: {fileID: 0}
     weight: 0
   knee_left:
@@ -1487,9 +1501,11 @@ MonoBehaviour:
     B: 25
     C: 27
     joint: {fileID: 1915829551}
+    jointX: {fileID: 0}
     appendage: {fileID: 1852966177}
     anim: {fileID: 0}
     lastAppendageAngle: {x: 0, y: 0, z: 0}
+    defaultAngle: {x: 0, y: 0, z: 0}
     weightedTarget: {fileID: 0}
     weight: 0
   body:
@@ -1497,15 +1513,19 @@ MonoBehaviour:
     B: 11
     C: 24
     joint: {fileID: 154811737}
+    jointX: {fileID: 0}
     appendage: {fileID: 0}
     anim: {fileID: 0}
     lastAppendageAngle: {x: 0, y: 0, z: 0}
+    defaultAngle: {x: 0, y: 0, z: 0}
     weightedTarget: {fileID: 0}
     weight: 0
     D: 23
   targetTransform: {fileID: 693755594}
   smoothRotate: 1
   autoUpdate: 1
+  nextFrame: 0
+  useVectors: 0
 --- !u!4 &613014213
 Transform:
   m_ObjectHideFlags: 0
@@ -2471,6 +2491,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661971512}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1681903624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1681903626}
+  - component: {fileID: 1681903625}
+  m_Layer: 0
+  m_Name: LandmarkProcessor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1681903625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1681903624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6048a7205188428479a6ea0f582f4aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoPath: findstory_video_116971_1080p_watermark.mp4
+  poseJsonFilename: test2.json
+  generating: 0
+--- !u!4 &1681903626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1681903624}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.082668, y: -0.31140503, z: 10.130548}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1769988035
 GameObject:
   m_ObjectHideFlags: 0

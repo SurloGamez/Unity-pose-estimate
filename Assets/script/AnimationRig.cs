@@ -5,12 +5,10 @@ using UnityEngine;
 public class AnimationRig : MonoBehaviour
 {
     public bool useNormalizeAppendage;
-    //public Vector3 poseForward, poseRight, poseUp;
-    //public string filename = "poseJson.json";
-    //public Poses poses;
-    public TextAsset WalkLandmarkJson, RunAnimJson;
-    public AnimationLandmark walkAnim, runAnim, jumpAnim;
+    
     private AnimationLandmark anim;
+    public LandmarkHandler landmarkHandler;
+    public string walkAnim = "walk", runAnim = "run", jumpAnim = "jump";
 
     public int poseIndex = 0;
     public float poseScale = 1;
@@ -30,98 +28,50 @@ public class AnimationRig : MonoBehaviour
     private Transform bodyTransform;
     private Vector3 bodyRotationOffset;
 
- 
+    private string jointRigParentSuffix = "_parent";
 
     public bool smoothRotate = true;
 
     private System.Action animationCompleteCallback;
 
-    [System.Serializable]
-    public class Joint
-    {
-        public int A, B, C; // A: Root  B: Joint  C: appendage
-        public Transform joint;
-        public Transform appendage;
-        public AnimationRig anim;
-        public Vector3 lastAppendageAngle;
 
-        public Transform weightedTarget;
-        [Range(0, 1)]
-        public float weight = 0;
-
-        public virtual void SetJointAngle(GameObject[] landmarkPoints)
-        {
-            //Vector3 root = (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized;
-            Vector3 appendage = (landmarkPoints[C].transform.position - landmarkPoints[B].transform.position).normalized;
-            Vector3 newAppendageAngle = appendage;
-            if (anim.useNormalizeAppendage)
-            {
-                appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
-            }
-            if(weightedTarget)
-            {
-                float targetDelta = Vector3.Distance(weightedTarget.position, appendage) * weight;
-                appendage = appendage + targetDelta * (weightedTarget.position - appendage).normalized;
-            }
-            if (!anim.smoothRotate) joint.transform.up = -appendage;// newAppendageAngle;
-            lastAppendageAngle = -appendage;
-        }
-
-        public virtual void SmoothRotate()
-        {
-            float t = Time.deltaTime;
-            Vector3 nextAngle = lastAppendageAngle;
-            if (t < anim.nextFrame - Time.time)
-            {
-                float distance = Vector3.Distance(joint.transform.up, lastAppendageAngle);
-                float timeRemaining = anim.nextFrame - Time.time;
-                int stepsRemaining = (int)(timeRemaining / t);
-                nextAngle = Vector3.MoveTowards(joint.transform.up, lastAppendageAngle, distance / stepsRemaining);
-            }
-
-            joint.transform.up = nextAngle;
-        }
-    }
-    [System.Serializable]
-    public class JointCompound : Joint
-    {
-        public int D; // A: Root  B: Joint  C: appendage
-
-        public override void SetJointAngle(GameObject[] landmarkPoints) // sets the body rotaiton
-        {
-            //Vector3 root = (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized;
-            Vector3 CD = (Vector3.Distance(landmarkPoints[C].transform.position, landmarkPoints[D].transform.position) / 2) *
-                (landmarkPoints[D].transform.position - landmarkPoints[C].transform.position).normalized + landmarkPoints[C].transform.position;
-            Vector3 AB = (Vector3.Distance(landmarkPoints[A].transform.position, landmarkPoints[B].transform.position) / 2) *
-                (landmarkPoints[B].transform.position - landmarkPoints[A].transform.position).normalized + landmarkPoints[A].transform.position;
-
-            Vector3 appendage = (AB - CD).normalized;
-            Vector3 newAppendageAngle = appendage;
-            if (anim.useNormalizeAppendage)
-            {
-                appendage = anim.NormalizeAppendage(appendage, anim.targetTransform);
-
-            }
-
-            if (!anim.smoothRotate) joint.transform.up = appendage;// newAppendageAngle;
-            lastAppendageAngle = appendage;
-        }
-    }
-
+    public bool splitJoint = false;
+    public bool absolute = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        doeverythinginstart();
+        anim = landmarkHandler.GetAnimationLandmark(walkAnim);
+        animationCompleteCallback = defaultAnimationEndCallback;
+        SetupModel();
         StartCoroutine(Animate());
     }
 
+    //for AnimationRigEditor
     public void Setup()
     {
         animationCompleteCallback = defaultAnimationEndCallback;
-        doeverythinginstart();
+        anim = landmarkHandler.GetAnimationLandmark(walkAnim);
+        //animationCompleteCallback = defaultAnimationEndCallback;
+        SetupModel();
     }
-    private void doeverythinginstart()
+    //for AnimationRigEditor
+    public void CleanUp()
+    {
+        //remove all _parent objects from joints
+        foreach(Joint joint in joints)
+        {
+            Debug.Log($"Checking joint: {joint.joint.name}");
+            while (joint.joint.name.Contains(jointRigParentSuffix) && joint.joint.childCount == 1)
+            {
+                Transform oldJoint = joint.joint;
+                joint.joint = oldJoint.GetChild(0);
+                oldJoint.GetChild(0).parent = oldJoint.parent;
+                DestroyImmediate(oldJoint.gameObject);
+            }
+        }
+    }
+    private void SetupModel()
     {
         bodyTransform = body.joint;
         bodyRotationOffset = targetTransform.localEulerAngles - bodyTransform.localEulerAngles;
@@ -139,27 +89,39 @@ public class AnimationRig : MonoBehaviour
         for (int i = 0; i < joints.Count; i += 1)
         {
             Joint joint = joints[i];
-            if (joint.joint.name != "_parent")
+            if (!joint.joint.name.Contains( jointRigParentSuffix))
             {
-                GameObject newJoint = new GameObject(joint.joint.name + "_parent");
+                GameObject newJoint = new GameObject(joint.joint.name + jointRigParentSuffix);
+                GameObject newJointX = new GameObject(joint.joint.name +"X" + jointRigParentSuffix);
                 newJoint.transform.position = joint.joint.position;
+                newJointX.transform.position = joint.joint.position;
+
+                //newJoint.transform.forward = targetTransform.forward;
+                //newJointX.transform.forward = targetTransform.forward;
                 if (joint.appendage)
                 {
                     newJoint.transform.up = joint.joint.position - joint.appendage.position;
+                    newJointX.transform.up = joint.joint.position - joint.appendage.position;
                     //joint.lastAppendageAngle = newJoint.transform.up;
                 }
-
+                newJointX.transform.parent = newJoint.transform;
                 newJoint.transform.parent = joint.joint.parent;
-                joint.joint.parent = newJoint.transform;
+                joint.joint.parent = newJointX.transform;
                 joint.joint = newJoint.transform;
+                joint.jointX = newJointX.transform;
                 joint.anim = this;
+                joint.defaultAngle = joint.joint.localEulerAngles;
             }
             
         }
-        anim = walkAnim;
+
+        GameObject landmarkContainer = new GameObject();
+        landmarkContainer.name = "LandmarkPoints";
         for (int i = 0; i < landmarkPoints.Length; i += 1)
         {
             landmarkPoints[i] = Instantiate(landmarkPointPrefab);
+            landmarkPoints[i].name = i.ToString();
+            landmarkPoints[i].transform.parent = landmarkContainer.transform;
         }
         //NormalizeLandmarks(24);
         SetPose(poseIndex);
@@ -185,7 +147,7 @@ public class AnimationRig : MonoBehaviour
 
         DrawLine(landmarkPoints[24].transform.position, landmarkPoints[24].transform.position + anim.poseForward * poseScale, Color.blue);
     }
-    float nextFrame = 0;
+    [HideInInspector]public float nextFrame = 0;
     private IEnumerator Animate()
     {
         while (true)
@@ -208,7 +170,7 @@ public class AnimationRig : MonoBehaviour
     {
         SetPose(poseIndex);
     }
-    
+    public bool useVectors;
     private void SetPose(int poseIndex)
     {
 
@@ -221,8 +183,20 @@ public class AnimationRig : MonoBehaviour
             landmarkPoints[i].transform.position = (new Vector3(x, y, z) + referenceLandmark) * poseScale;
         }
 
+        
+        foreach (Joint joint in joints)
+        {
+            if (useVectors)
+            {
+                joint.SetJointAngle(landmarkPoints);
+            }
+            else
+            {
+                joint.SetJointAngle(landmarkPoints,anim.poseForward,anim.poseRight,anim.poseUp);
+            }
+            
+        }
         bodyTransform.localEulerAngles = targetTransform.localEulerAngles - bodyRotationOffset;
-        foreach (Joint joint in joints) { joint.SetJointAngle(landmarkPoints); }
 
 
     }
@@ -270,7 +244,7 @@ public class AnimationRig : MonoBehaviour
         Debug.DrawLine(a, b, color);
     }
 
-    private Vector3 NormalizeAppendage(Vector3 appendage, Transform targetTransform)
+    public Vector3 NormalizeAppendage(Vector3 appendage, Transform targetTransform)
     {
         //map pose onto world space
         float forward = Vector3.Dot(anim.poseForward, appendage);
@@ -293,15 +267,15 @@ public class AnimationRig : MonoBehaviour
         {
             if(name == "walk")
             {
-                anim = walkAnim;
+                anim = landmarkHandler.GetAnimationLandmark(walkAnim);
                 poseIndex = 0;
             }else if(name == "run")
             {
-                anim = runAnim;
+                anim = landmarkHandler.GetAnimationLandmark(runAnim);
                 poseIndex = 0;
             }else if(name == "jump")
             {
-                anim = jumpAnim;
+                anim = landmarkHandler.GetAnimationLandmark(jumpAnim);
                 poseIndex = 0;
             }
         }
@@ -339,3 +313,4 @@ public class AnimationRig : MonoBehaviour
 
     }
 }
+

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b53698b886812794e86a95bcd529f7c5, type: 3}
+  m_Name: Landmark Handler
+  m_EditorClassIdentifier: 
+  animationLandmarks:
+  - name: walk
+    jsonFile: {fileID: 4900000, guid: 742d794e1a2b8ac4f970d952be8dfe91, type: 3}
+    frameSpeed: 0
+    frameRate: 0
+    poseForward: {x: 0, y: 0, z: -1}
+    poseRight: {x: -1, y: 0, z: 0}
+    poseUp: {x: 0, y: 1, z: 0}
+  - name: run
+    jsonFile: {fileID: 4900000, guid: 9eb041729122ba7479ce07d54ee5b4b9, type: 3}
+    frameSpeed: 0
+    frameRate: 15
+    poseForward: {x: 1, y: 0, z: 0}
+    poseRight: {x: 0, y: 0, z: -1}
+    poseUp: {x: 0, y: 1, z: 0}
+  - name: jump
+    jsonFile: {fileID: 4900000, guid: a40e6890f7c6c5c40a4b75a67d89742d, type: 3}
+    frameSpeed: 0
+    frameRate: 0
+    poseForward: {x: 0, y: 0, z: 0}
+    poseRight: {x: 0, y: 0, z: 0}
+    poseUp: {x: 0, y: 0, z: 0}

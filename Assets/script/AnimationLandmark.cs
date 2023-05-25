@@ -15,8 +15,12 @@ public class AnimationLandmark
     private Poses _poses;
     private Poses GetPoses()
     {
-        if(_poses == null)
+        if(_poses == null || _poses.poses.Length == 0)
+        {
             _poses = Utility.GetJsonObject<Poses>(jsonFile.name + ".json");
+            Debug.Log($"Getting Pose {_poses.poses.Length}");
+        }
+        
         return _poses;
     }
 
