@@ -7,10 +7,11 @@ public class AnimationLandmark
 {
     public string name;
     public TextAsset jsonFile;
-    [SerializeField] float frameSpeed = 1;
-    public float frameRate;
+    //[SerializeField] float frameSpeed = 1;
+    public float frameRate; //frames per second
     public Poses poses { get { return GetPoses(); } }
     public Vector3 poseForward, poseRight, poseUp;
+    public int poseCount { get { return GetPoses().poses.Length; } }
 
     private Poses _poses;
     private Poses GetPoses()
@@ -23,5 +24,6 @@ public class AnimationLandmark
         
         return _poses;
     }
+
 
 }

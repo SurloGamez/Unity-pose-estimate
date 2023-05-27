@@ -17,10 +17,36 @@ public class LandmarkProcessorEditor : Editor
     {
 
         DrawDefaultInspector();
-        if (GUILayout.Button("Generate", GUILayout.Height(35)))
+        if (GUILayout.Button("Upload and Process Video", GUILayout.Height(35)))
         {
             targetManager.Generate();
         }
-       
+
+        if (targetManager.poseSetup)
+        {
+            if (GUILayout.Button("-", GUILayout.Height(35)))
+            {
+                targetManager.DecrementPose();
+            }
+            if (GUILayout.Button("+", GUILayout.Height(35)))
+            {
+                targetManager.IncrementPose();
+            }
+            if (GUILayout.Button("Clear Pose Display", GUILayout.Height(35)))
+            {
+                //targetManager.SetupPoseDisplay();
+                targetManager.ClearPoseDisplay();
+            }
+        }
+        else
+        {
+            if (GUILayout.Button("Setup Pose Display", GUILayout.Height(35)))
+            {
+                targetManager.SetupPoseDisplay();
+            }
+        }
+
+        
+
     }
 }

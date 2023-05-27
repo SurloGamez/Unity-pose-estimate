@@ -255,6 +255,7 @@ public class AnimationRig : MonoBehaviour
 
         return (targetTransform.forward * forward + targetTransform.up * up + targetTransform.right * right).normalized;
     }
+
     void defaultAnimationEndCallback() { }
     public void ChangeAnimation(string name)
     {

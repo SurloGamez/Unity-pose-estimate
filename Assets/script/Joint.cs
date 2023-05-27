@@ -7,7 +7,7 @@ public class Joint
 {
     public int A, B, C; // A: Root  B: Joint  C: appendage
     public Transform joint;
-    public Transform jointX;
+    [HideInInspector]public Transform jointX;
     public Transform appendage;
     public AnimationRig anim;
     public Vector3 lastAppendageAngle;

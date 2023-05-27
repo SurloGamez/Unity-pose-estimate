@@ -27,7 +27,7 @@ public class Vector : MonoBehaviour
         Debug.Log(Utility.AngleBetweenPoints(0, -1));
         Debug.Log(Utility.AngleBetweenPoints(1, -1));
     }
-    int x = 0, y = 0;
+    //int x = 0, y = 0;
     void Update()
     {
         
