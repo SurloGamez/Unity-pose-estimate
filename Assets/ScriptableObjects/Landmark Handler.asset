@@ -15,28 +15,30 @@ MonoBehaviour:
   animationLandmarks:
   - name: walk
     jsonFile: {fileID: 4900000, guid: 742d794e1a2b8ac4f970d952be8dfe91, type: 3}
-    frameSpeed: 0
     frameRate: 0
     poseForward: {x: 0, y: 0, z: -1}
     poseRight: {x: -1, y: 0, z: 0}
     poseUp: {x: 0, y: 1, z: 0}
   - name: run
     jsonFile: {fileID: 4900000, guid: 9eb041729122ba7479ce07d54ee5b4b9, type: 3}
-    frameSpeed: 0
     frameRate: 15
     poseForward: {x: 1, y: 0, z: 0}
     poseRight: {x: 0, y: 0, z: -1}
     poseUp: {x: 0, y: 1, z: 0}
   - name: jump
     jsonFile: {fileID: 4900000, guid: a40e6890f7c6c5c40a4b75a67d89742d, type: 3}
-    frameSpeed: 0
     frameRate: 0
     poseForward: {x: 0, y: 0, z: 0}
     poseRight: {x: 0, y: 0, z: 0}
     poseUp: {x: 0, y: 0, z: 0}
   - name: test
     jsonFile: {fileID: 4900000, guid: 38c5601ea42cc87469649e5e0708e59b, type: 3}
-    frameSpeed: 0
+    frameRate: 5
+    poseForward: {x: 0, y: 0, z: -1}
+    poseRight: {x: -1, y: 0, z: 0}
+    poseUp: {x: 0, y: 1, z: 0}
+  - name: idle
+    jsonFile: {fileID: 4900000, guid: 2c89c59730f0b984587c2a67439eda23, type: 3}
     frameRate: 5
     poseForward: {x: 0, y: 0, z: -1}
     poseRight: {x: -1, y: 0, z: 0}
