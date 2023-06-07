@@ -530,7 +530,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationRigHandler: {fileID: 11400000, guid: 982378141571c334bb47693c02eacaf0, type: 2}
   poseIndex: 0
-  smoothRotate: 0
+  smoothRotate: 1
   shoulder_right:
     A: 24
     B: 12
